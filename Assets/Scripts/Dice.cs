@@ -5,23 +5,27 @@ using UnityEngine.UI;
 
 public class Dice : MonoBehaviour
 {
-    int diceResult;
+    public int diceResult;
 
     [SerializeField] private Button button;
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private Animator animator;
-    [SerializeField] private WaitForSeconds waitForDice;
-    [SerializeField] private Vector2 targetOffset;
+    
     [SerializeField] private Vector3 targetRotation;
+    [SerializeField] private Vector2 targetOffset;
+    [SerializeField] private Vector2 originalPosition;
+
     [SerializeField] private float duration;
     [SerializeField] private bool isRolling = false;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         animator = GetComponent<Animator>();
         button = GetComponent<Button>();
         button.onClick.AddListener(RollDice);
-        targetRotation = new Vector3(0, 0, 720);
+        originalPosition = rectTransform.anchoredPosition;
+        targetRotation = new Vector3(0, 0, 1080);
     }
 
     public void RollDice()
@@ -30,9 +34,10 @@ public class Dice : MonoBehaviour
         { 
             isRolling = true;
 
-            int rndValue = Random.Range(1, 7);
+            diceResult = Random.Range(1, 7);
+            Debug.Log(diceResult);
 
-            switch (rndValue)
+            switch (diceResult)
             {
                 case 1:
                     animator.SetTrigger("Dice1");
@@ -63,7 +68,6 @@ public class Dice : MonoBehaviour
 
     private void AnimateDice()
     {
-        Vector2 originalPosition = rectTransform.anchoredPosition;
         Vector2 targetPosition = originalPosition + targetOffset; 
 
         Sequence sequence = DOTween.Sequence();
